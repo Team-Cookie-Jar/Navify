@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NAVIFY 2.0 - AI Immigrant Assistant</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+      <div class="nav-logo">NAVIFY</div>
+      <div class="nav-actions">
+        <button id="emergency-btn" class="emergency-btn pulse">
+          <i class="fas fa-life-ring"></i> EMERGENCY
+        </button>
+        <button class="user-btn">
+          <i class="fas fa-user"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Your <span class="highlight">AI Immigrant</span> Copilot
+          </h1>
+          <p class="hero-subtitle">
+            From arrival to citizenship - we guide you every step
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="visa-progress">60%</div>
+              <div class="stat-label">Visa Progress</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">3</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">12</div>
+              <div class="stat-label">Tasks Completed</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-illustration">
+          <img
+            src="https://illustrations.popsy.co/purple/digital-nomad.svg"
+            alt="Immigrant illustration"
+            class="float-animation"
+          />
+        </div>
+      </section>
+
+      <!-- Main Features Grid -->
+      <section class="features-grid">
+        <div class="feature-card scanner-card" id="scanner-card">
+          <div class="feature-icon">
+            <i class="fas fa-camera"></i>
+          </div>
+          <h3>Document Scanner</h3>
+          <p>Upload visas, passports and get instant analysis</p>
+          <div class="wave-animation"></div>
+        </div>
+
+        <div class="feature-card assistant-card" id="assistant-card">
+          <div class="feature-icon">
+            <i class="fas fa-microphone"></i>
+          </div>
+          <h3>Voice Assistant</h3>
+          <p>Ask NAVI anything in your native language</p>
+          <div class="ripple-animation"></div>
+        </div>
+
+        <div class="feature-card visa-card">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Visa Guardian</h3>
+          <p>Track deadlines and get alerts</p>
+        </div>
+
+        <div class="feature-card quest-card">
+          <div class="feature-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <h3>Daily Quests</h3>
+          <p>Earn rewards for learning</p>
+        </div>
+      </section>
+
+      <!-- Document Scanner Section -->
+      <section class="scanner-section hidden" id="scanner-section">
+        <div class="section-header">
+          <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h2>Document Scanner</h2>
+        </div>
+
+        <div class="upload-container">
+          <div class="upload-box" id="upload-box">
+            <input type="file" id="doc-upload" accept="image/*" />
+            <label for="doc-upload" class="upload-label">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Upload Visa/Passport</p>
+              <p class="subtext">or drag and drop</p>
+            </label>
+            <img id="uploaded-image" class="hidden" />
+          </div>
+
+          <div id="doc-analysis" class="doc-analysis hidden">
+            <h3>Document Analysis</h3>
+            <ul id="analysis-results">
+              <!-- Filled by JavaScript -->
+            </ul>
+
+            <button id="what-if-btn" class="action-btn">
+              <i class="fas fa-question-circle"></i> What If Simulator
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Voice Assistant Section -->
+      <section class="assistant-section hidden" id="assistant-section">
+        <div class="section-header">
+          <button class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <h2>Voice Assistant</h2>
+        </div>
+
+        <div class="assistant-container">
+          <div class="assistant-avatar">
+            <div class="avatar-circle">
+              <img src="https://i.pravatar.cc/150?img=5" alt="NAVI Assistant" />
+              <div class="listening-indicator hidden" id="listening-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <p>Hi! I'm NAVI, your assistant</p>
+          </div>
+
+          <div class="voice-controls">
+            <button id="start-listening" class="voice-btn">
+              <i class="fas fa-microphone"></i> Tap to Speak
+            </button>
+            <p class="or-divider">or</p>
+            <div class="voice-input">
+              <input
+                type="text"
+                id="voice-query"
+                placeholder="Type your question here..."
+              />
+              <button id="submit-query">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="quick-prompts">
+            <button class="prompt-btn">Help me write to my landlord</button>
+            <button class="prompt-btn">Translate 'medical emergency'</button>
+            <button class="prompt-btn">Check my visa requirements</button>
+          </div>
+
+          <div id="assistant-response" class="assistant-response hidden">
+            <div class="response-content" id="response-content">
+              <!-- Filled by JavaScript -->
+            </div>
+            <div class="response-actions">
+              <button class="response-btn">
+                <i class="fas fa-volume-up"></i> Play
+              </button>
+              <button class="response-btn">
+                <i class="fas fa-copy"></i> Copy
+              </button>
+              <button class="response-btn">
+                <i class="fas fa-share"></i> Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Emergency Panel -->
+      <div id="emergency-panel" class="emergency-panel hidden">
+        <div class="emergency-header">
+          <h3><i class="fas fa-exclamation-triangle"></i> You Have Rights!</h3>
+          <button id="close-emergency"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="emergency-content">
+          <div class="emergency-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <p>Do not sign anything without a lawyer</p>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <p>Ask to speak with your consulate</p>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <p>You have the right to remain silent</p>
+            </div>
+          </div>
+
+          <div class="emergency-contacts">
+            <h4>Immediate Help:</h4>
+            <button class="contact-btn">
+              <i class="fas fa-phone"></i> Call Local NGO
+            </button>
+            <button class="contact-btn">
+              <i class="fas fa-gavel"></i> Contact Lawyer
+            </button>
+            <button class="contact-btn">
+              <i class="fas fa-passport"></i> Embassy Contacts
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- What If Simulator Modal -->
+      <div id="what-if-modal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3><i class="fas fa-question-circle"></i> What If Simulator</h3>
+            <button id="close-modal"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="simulator-form">
+              <label for="scenario-select">Choose a scenario:</label>
+              <select id="scenario-select">
+                <option value="marriage">If I marry a citizen</option>
+                <option value="job">If I get a job offer</option>
+                <option value="student">If I enroll in university</option>
+              </select>
+
+              <button id="simulate-btn" class="action-btn">Simulate</button>
+            </div>
+
+            <div id="simulation-result" class="simulation-result hidden">
+              <h4>Simulation Result:</h4>
+              <p id="result-text"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animated Background Elements -->
+    <div class="bg-elements">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
