@@ -1,0 +1,6 @@
+node_modules
+out
+backend/app/__pycache__/
+backend/app/models/__pycache__/
+backend/app/routers/__pycache__/
+README.md
