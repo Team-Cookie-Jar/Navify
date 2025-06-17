@@ -18,14 +18,15 @@ class DocImageJSON(BaseModel):
     img: str
 
 class UserData(BaseModel):
-    id: int
+    id: str
     firstname: str
     lastname: str
     email: str
     phone: str
-    age: str
+    age: int
     DOB: datetime
     user_profile: str
+
 
 class UserContacts(BaseModel):
     name: str

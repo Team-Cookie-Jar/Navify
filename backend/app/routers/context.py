@@ -6,13 +6,23 @@ from app.models.util_model import Location
 import requests
 from dateutil import parser as dt_parser
 
+# Use on Linux
+"""
+try:
+    from app.core.opening_hours import OpeningHours
+except ImportError:
+    OpeningHours = None  # Fallback if the package isn't installed
+"""
+
+# Alternative
+
 class OpeningHours:
     def __init__(self, opening_hours_str):
         self.opening_hours_str = opening_hours_str
 
     def is_open(self, user_time):
-        # Placeholder for actual implementation
-        return True  # Assume open for simplicity
+        return True
+
 
 router = APIRouter()
 
@@ -88,14 +98,14 @@ def generate_suggestion(tags, time, env):
 
 
 @router.post("/context/detect", response_model=SuggestionResponse)
-def detectContext(req: ContextRequest):
+async def detect_context(req: ContextRequest):
     suggestions = []
     location = req.location
     time = req.time
     env = req.env_field
 
     for amenity in amenities:
-        data = query_overpass(location=location, radius=1000, amenity_type=amenity)
+        data = query_overpass(location=location, radius=100, amenity_type=amenity)
         for element in data.get("elements", []):
             tags = element.get("tags", {})
             if element.get("type") in ("way", "relation"):

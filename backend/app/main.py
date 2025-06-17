@@ -2,8 +2,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import context, crisis, login, quest, register, visa
-from backend.app.routers import assistant
-# from dotenv import load_dotenv
 
 app = FastAPI(title="Navify API")
 
@@ -15,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(assistant.router)
+# app.include_router(assistant.router) Not on my PC, NO
 app.include_router(context.router)
 app.include_router(crisis.router)
 app.include_router(login.router)

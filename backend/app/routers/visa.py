@@ -1,46 +1,70 @@
 # app/routers/visa.py
 
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, Query, UploadFile, File, Form
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from typing import Dict, Optional
+import base64
+from app.core.ai_engine import analyze_document, simulate_what_if
+from app.core.utils import decode_base64_json
 
 router = APIRouter()
 
-@router.post("/visa/analyse", response_model=dict)
-def analyse_visa_document(
-    document: str = Query(..., description="Base64 encoded document or JSON with structured fields"),
-    country: str = Query(..., description="Country for which the visa is being applied")
-):
-    try:
-        # Placeholder for actual document analysis logic
-        # This would involve parsing the document and checking against rules
-        if not document or not country:
-            raise HTTPException(status_code=400, detail={"error": "Document and country are required"})
+class DocumentInput(BaseModel):
+    document_json: Optional[dict] = None
+    document_base64: Optional[str] = None
+    scenario: Optional[dict] = None
 
-        # Simulated response
+@router.post("/visa/analyse", response_model=Dict)
+def analyse_visa_document(doc: DocumentInput):
+    try:
+        # Decode if base64
+        if doc.document_base64:
+            document_data = decode_base64_json(doc.document_base64)
+
+        else:
+            document_data = doc.document_json
+
+        if not document_data:
+            return JSONResponse(status_code=400, content={"error": "Invalid or missing document."})
+
+        result = analyze_document(document_data)
+
         return {
-            "status": "error_detected",
-            "issues": ["Missing consular stamp on page 3"],
-            "confidence": 0.95
+            "status": "success",
+            "issues": result["issues"],
+            "confidence": result["confidence"],
         }
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail={"error": str(e)})
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 
-@router.post("/visa/simulate", response_model=dict)
-def simulate_visa_path(
-    user_scenario: dict = Query(..., description="User's current visa scenario and changes")
-):
+@router.post("/visa/simulate", response_model=Dict)
+def simulate_visa_path(doc: DocumentInput):
     try:
+
+        # Decode if base64
+        if doc.document_base64:
+            document_data = decode_base64_json(doc.document_base64)
+
+        else:
+            document_data = doc.document_json
+
+
         # Placeholder for actual simulation logic
-        if not user_scenario:
-            raise HTTPException(status_code=400, detail={"error": "User scenario is required"})
+        if not doc.scenario:
+            return JSONResponse(status_code=400, content={"error": "User scenario is required"})
 
         # Simulated response
+        simulation = simulate_what_if(document_data, doc.scenario)
+
         return {
             "current_path": "Green Card in 2 years",
             "new_path": "Green Card in 6 months",
-            "legal_basis": "Marriage-based fast track clause 245(i)"
+            "legal_basis": "Marriage-based fast track clause 245(i)",
+            "what_if": simulation
         }
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail={"error": str(e)})
+        return JSONResponse(status_code=500, content={"error": str(e)})

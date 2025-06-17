@@ -5,7 +5,7 @@ from typing import List, Optional
 from datetime import datetime
 
 class FromVoiceRequest(BaseModel):
-    user_id: Optional[int] = None
+    user_id: Optional[str] = None
     time: datetime
     msg: str
 
