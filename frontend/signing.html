@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NAVIFY 2.0 - Authentication</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Reusing all the CSS from your index page */
+      :root {
+        --primary: #5e72e4;
+        --primary-light: #7a8ef1;
+        --primary-dark: #4a56d2;
+        --secondary: #f5365c;
+        --accent: #11cdef;
+        --success: #2dce89;
+        --warning: #fb6340;
+        --danger: #f5365c;
+        --dark: #1a1a2e;
+        --light: #16213e;
+        --gray: #4a5568;
+        --gray-light: #2d3748;
+
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+          0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.2),
+          0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
+          0 10px 10px -5px rgba(0, 0, 0, 0.1);
+
+        --radius-sm: 0.25rem;
+        --radius: 0.5rem;
+        --radius-md: 0.75rem;
+        --radius-lg: 1rem;
+        --radius-full: 9999px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--dark);
+        color: #e2e8f0;
+        line-height: 1.6;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Auth Container */
+      .auth-container {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+      }
+
+      .auth-illustration {
+        flex: 1;
+        background: linear-gradient(
+          135deg,
+          rgba(94, 114, 228, 0.1),
+          rgba(21, 33, 62, 0.8)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .auth-illustration::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: var(--primary);
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.15;
+        top: 20%;
+        left: 20%;
+        animation: float 15s ease-in-out infinite;
+      }
+
+      .auth-illustration::after {
+        content: "";
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: var(--secondary);
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.1;
+        bottom: 10%;
+        right: 10%;
+        animation: float 18s ease-in-out infinite reverse;
+      }
+
+      .auth-illustration img {
+        max-width: 80%;
+        max-height: 80vh;
+        z-index: 2;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .auth-form-container {
+        flex: 1;
+        max-width: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .auth-form-wrapper {
+        width: 100%;
+        max-width: 400px;
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      .auth-logo {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .auth-card {
+        background: var(--light);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .auth-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        animation: wave 3s linear infinite;
+      }
+
+      .auth-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .auth-subtitle {
+        color: #a0aec0;
+        margin-bottom: 2rem;
+        font-size: 0.9375rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        font-size: 0.9375rem;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.875rem 1.25rem;
+        background: var(--gray-light);
+        border: 1px solid var(--gray);
+        border-radius: var(--radius);
+        font-family: inherit;
+        font-size: 0.9375rem;
+        color: #e2e8f0;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.3);
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+      }
+
+      .auth-btn {
+        width: 100%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+        box-shadow: 0 4px 6px rgba(94, 114, 228, 0.3);
+      }
+
+      .auth-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(94, 114, 228, 0.4);
+      }
+
+      .auth-btn.secondary {
+        background: var(--secondary);
+        box-shadow: 0 4px 6px rgba(245, 54, 92, 0.3);
+      }
+
+      .auth-btn.secondary:hover {
+        background: #e0315a;
+        box-shadow: 0 6px 8px rgba(245, 54, 92, 0.4);
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #a0aec0;
+        font-size: 0.875rem;
+      }
+
+      .auth-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .auth-link:hover {
+        color: var(--primary-light);
+        text-decoration: underline;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: #a0aec0;
+        font-size: 0.875rem;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--gray);
+        margin: 0 0.5rem;
+      }
+
+      .social-auth {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .social-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--gray);
+        background: var(--gray-light);
+        color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .social-btn:hover {
+        background: var(--gray);
+        transform: translateY(-2px);
+      }
+
+      /* Verification Code Input */
+      .code-inputs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .code-input {
+        flex: 1;
+        height: 60px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        background: var(--gray-light);
+        border: 1px solid var(--gray);
+        border-radius: var(--radius);
+        color: #e2e8f0;
+        transition: all 0.3s ease;
+      }
+
+      .code-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.3);
+      }
+
+      /* Password Strength */
+      .password-strength {
+        height: 4px;
+        background: var(--gray);
+        border-radius: var(--radius);
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+
+      .strength-meter {
+        height: 100%;
+        width: 0%;
+        background: var(--danger);
+        transition: all 0.3s ease;
+      }
+
+      /* Success Message */
+      .success-message {
+        background: rgba(45, 206, 137, 0.1);
+        border: 1px solid var(--success);
+        color: var(--success);
+        padding: 1rem;
+        border-radius: var(--radius);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes float {
+        0% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(0, -10px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+
+      @keyframes wave {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(94, 114, 228, 0.4);
+        }
+        70% {
+          transform: scale(1.05);
+          box-shadow: 0 0 0 10px rgba(94, 114, 228, 0);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(94, 114, 228, 0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .auth-container {
+          flex-direction: column;
+        }
+
+        .auth-illustration {
+          display: none;
+        }
+
+        .auth-form-container {
+          max-width: 100%;
+          padding: 1.5rem;
+        }
+
+        .auth-card {
+          padding: 1.5rem;
+        }
+      }
+
+      /* Toggle between forms */
+      .auth-form {
+        display: none;
+      }
+
+      .auth-form.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-illustration">
+        <img
+          src="https://illustrations.popsy.co/amber/digital-nomad.svg"
+          alt="Auth Illustration"
+        />
+      </div>
+
+      <div class="auth-form-container">
+        <div class="auth-form-wrapper">
+          <!-- Login Form -->
+          <div class="auth-form active" id="login-form">
+            <div class="auth-logo"><i class="fas fa-compass"></i> NAVIFY</div>
+
+            <div class="auth-card">
+              <h1 class="auth-title">Welcome Back</h1>
+              <p class="auth-subtitle">
+                Sign in to continue your immigration journey
+              </p>
+
+              <form id="login">
+                <div class="form-group">
+                  <label for="login-email">Email</label>
+                  <input
+                    type="email"
+                    id="login-email"
+                    class="form-control"
+                    placeholder="your@email.com"
+                    required
+                  />
+                  <i class="fas fa-envelope input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <label for="login-password">Password</label>
+                  <input
+                    type="password"
+                    id="login-password"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <div
+                  class="form-group"
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <div>
+                    <input type="checkbox" id="remember-me" />
+                    <label for="remember-me">Remember me</label>
+                  </div>
+                  <a
+                    href="#"
+                    class="auth-link"
+                    onclick="showForm('forgot-form')"
+                    >Forgot password?</a
+                  >
+                </div>
+
+                <button type="submit" class="auth-btn">
+                  <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+
+                <div class="divider">or continue with</div>
+
+                <div class="social-auth">
+                  <button type="button" class="social-btn">
+                    <i class="fab fa-google"></i> Google
+                  </button>
+                  <button type="button" class="social-btn">
+                    <i class="fab fa-apple"></i> Apple
+                  </button>
+                </div>
+
+                <div class="auth-footer">
+                  Don't have an account?
+                  <a
+                    href="#"
+                    class="auth-link"
+                    onclick="showForm('signup-form')"
+                    >Sign up</a
+                  >
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Signup Form -->
+          <div class="auth-form" id="signup-form">
+            <div class="auth-logo"><i class="fas fa-compass"></i> NAVIFY</div>
+
+            <div class="auth-card">
+              <h1 class="auth-title">Create Account</h1>
+              <p class="auth-subtitle">
+                Start your immigration journey with us
+              </p>
+
+              <form id="signup">
+                <div class="form-group">
+                  <label for="signup-name">Full Name</label>
+                  <input
+                    type="text"
+                    id="signup-name"
+                    class="form-control"
+                    placeholder="John Doe"
+                    required
+                  />
+                  <i class="fas fa-user input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-email">Email</label>
+                  <input
+                    type="email"
+                    id="signup-email"
+                    class="form-control"
+                    placeholder="your@email.com"
+                    required
+                  />
+                  <i class="fas fa-envelope input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-password">Password</label>
+                  <input
+                    type="password"
+                    id="signup-password"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <i class="fas fa-lock input-icon"></i>
+                  <div class="password-strength">
+                    <div class="strength-meter" id="strength-meter"></div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-confirm">Confirm Password</label>
+                  <input
+                    type="password"
+                    id="signup-confirm"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <input type="checkbox" id="terms" />
+                  <label for="terms"
+                    >I agree to the <a href="#" class="auth-link">Terms</a> and
+                    <a href="#" class="auth-link">Privacy Policy</a></label
+                  >
+                </div>
+
+                <button type="submit" class="auth-btn">
+                  <i class="fas fa-user-plus"></i> Create Account
+                </button>
+
+                <div class="auth-footer">
+                  Already have an account?
+                  <a href="#" class="auth-link" onclick="showForm('login-form')"
+                    >Sign in</a
+                  >
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Forgot Password Form -->
+          <div class="auth-form" id="forgot-form">
+            <div class="auth-logo"><i class="fas fa-compass"></i> NAVIFY</div>
+
+            <div class="auth-card">
+              <h1 class="auth-title">Reset Password</h1>
+              <p class="auth-subtitle">
+                Enter your email to receive reset instructions
+              </p>
+
+              <form id="forgot">
+                <div class="form-group">
+                  <label for="forgot-email">Email</label>
+                  <input
+                    type="email"
+                    id="forgot-email"
+                    class="form-control"
+                    placeholder="your@email.com"
+                    required
+                  />
+                  <i class="fas fa-envelope input-icon"></i>
+                </div>
+
+                <button type="submit" class="auth-btn">
+                  <i class="fas fa-paper-plane"></i> Send Reset Link
+                </button>
+
+                <div class="auth-footer">
+                  Remember your password?
+                  <a href="#" class="auth-link" onclick="showForm('login-form')"
+                    >Sign in</a
+                  >
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Reset Password Form -->
+          <div class="auth-form" id="reset-form">
+            <div class="auth-logo"><i class="fas fa-compass"></i> NAVIFY</div>
+
+            <div class="auth-card">
+              <div class="success-message">
+                <i class="fas fa-check-circle"></i> Verification code sent to
+                your email
+              </div>
+
+              <h1 class="auth-title">New Password</h1>
+              <p class="auth-subtitle">
+                Create a new password for your account
+              </p>
+
+              <form id="reset">
+                <div class="form-group">
+                  <label for="reset-code">Verification Code</label>
+                  <div class="code-inputs">
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="reset-password">New Password</label>
+                  <input
+                    type="password"
+                    id="reset-password"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <label for="reset-confirm">Confirm Password</label>
+                  <input
+                    type="password"
+                    id="reset-confirm"
+                    class="form-control"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <button type="submit" class="auth-btn secondary">
+                  <i class="fas fa-sync-alt"></i> Reset Password
+                </button>
+
+                <div class="auth-footer">
+                  <a href="#" class="auth-link" onclick="showForm('login-form')"
+                    >Back to Sign In</a
+                  >
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Verify Code Form -->
+          <div class="auth-form" id="verify-form">
+            <div class="auth-logo"><i class="fas fa-compass"></i> NAVIFY</div>
+
+            <div class="auth-card">
+              <h1 class="auth-title">Verify Your Email</h1>
+              <p class="auth-subtitle">
+                We've sent a 6-digit code to your@email.com
+              </p>
+
+              <form id="verify">
+                <div class="form-group">
+                  <label>Verification Code</label>
+                  <div class="code-inputs">
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      class="code-input"
+                      maxlength="1"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" class="auth-btn">
+                  <i class="fas fa-check-circle"></i> Verify Account
+                </button>
+
+                <div class="auth-footer">
+                  Didn't receive code?
+                  <a href="#" class="auth-link">Resend</a> (23s)
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Toggle between forms
+      function showForm(formId) {
+        document.querySelectorAll(".auth-form").forEach((form) => {
+          form.classList.remove("active");
+        });
+        document.getElementById(formId).classList.add("active");
+      }
+
+      // Password strength meter
+      document
+        .getElementById("signup-password")
+        .addEventListener("input", function () {
+          const password = this.value;
+          const meter = document.getElementById("strength-meter");
+          let strength = 0;
+
+          if (password.length > 0) strength += 20;
+          if (password.length >= 8) strength += 20;
+          if (/[A-Z]/.test(password)) strength += 20;
+          if (/[0-9]/.test(password)) strength += 20;
+          if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+
+          meter.style.width = strength + "%";
+
+          if (strength < 40) {
+            meter.style.background = "var(--danger);";
+          } else if (strength < 80) {
+            meter.style.background = "var(--warning)";
+          } else {
+            meter.style.background = "var(--success)";
+          }
+        });
+
+      // Verification code input auto-focus
+      document
+        .querySelectorAll(".code-input")
+        .forEach((input, index, inputs) => {
+          input.addEventListener("input", function () {
+            if (this.value.length === 1) {
+              if (index < inputs.length - 1) {
+                inputs[index + 1].focus();
+              }
+            }
+          });
+
+          input.addEventListener("keydown", function (e) {
+            if (e.key === "Backspace" && this.value.length === 0) {
+              if (index > 0) {
+                inputs[index - 1].focus();
+              }
+            }
+          });
+        });
+
+      // Form submissions
+      document.querySelectorAll("form").forEach((form) => {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Show success message or next form
+          if (this.id === "forgot") {
+            showForm("reset-form");
+          } else if (this.id === "signup") {
+            showForm("verify-form");
+          } else if (this.id === "login") {
+            // Redirect to dashboard
+            window.location.href = "dashboard.html";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
