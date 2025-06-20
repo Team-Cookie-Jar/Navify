@@ -839,4 +839,767 @@
                   class="form-control"
                   placeholder="your@email.com"
                   required
-        
+                />
+                <i class="fas fa-envelope input-icon"></i>
+              </div>
+
+              <div class="form-navigation">
+                <button type="button" class="nav-btn primary" id="next-step-1">
+                  Continue <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+
+              <div class="auth-footer">
+                Already have an account?
+                <a href="#" class="auth-link" id="show-login">Sign in</a>
+              </div>
+            </div>
+
+            <!-- Step 2: Contact Information -->
+            <div class="form-step" id="step-2-form">
+              <h2 class="auth-title">Contact Details</h2>
+              <p class="auth-subtitle">How can we reach you?</p>
+
+              <div class="form-group">
+                <label>Phone Number</label>
+                <div class="phone-group">
+                  <div class="country-code">
+                    <select class="country-code-select" id="country-code">
+                      <option value="+234" data-flag="NG">+234 (NG)</option>
+                      <option value="+1" data-flag="🇺🇸">+1 (US)</option>
+                      <option value="+44" data-flag="🇬🇧">+44 (UK)</option>
+                      <option value="+91" data-flag="🇮🇳">+91 (IN)</option>
+                      <option value="+61" data-flag="🇦🇺">+61 (AU)</option>
+                      <option value="+33" data-flag="🇫🇷">+33 (FR)</option>
+                    </select>
+                    <span class="country-flag" id="country-flag">🇺🇸</span>
+                  </div>
+                  <input
+                    type="tel"
+                    id="phone"
+                    class="form-control"
+                    placeholder="Phone number"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <div class="date-picker">
+                  <input type="date" id="dob" class="form-control" required />
+                  <i class="fas fa-calendar-alt input-icon"></i>
+                </div>
+              </div>
+
+              <div class="form-navigation">
+                <button type="button" class="nav-btn" id="prev-step-2">
+                  <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="nav-btn primary" id="next-step-2">
+                  Continue <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: Create Password -->
+            <div class="form-step" id="step-3-form">
+              <h2 class="auth-title">Secure Your Account</h2>
+              <p class="auth-subtitle">Create a strong password</p>
+
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="••••••••"
+                  required
+                />
+                <i class="fas fa-lock input-icon"></i>
+
+                <div class="password-requirements">
+                  <div class="requirement" id="req-length">
+                    <i class="fas fa-circle"></i> At least 8 characters
+                  </div>
+                  <div class="requirement" id="req-uppercase">
+                    <i class="fas fa-circle"></i> Uppercase letter
+                  </div>
+                  <div class="requirement" id="req-lowercase">
+                    <i class="fas fa-circle"></i> Lowercase letter
+                  </div>
+                  <div class="requirement" id="req-number">
+                    <i class="fas fa-circle"></i> At least one number
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  class="form-control"
+                  placeholder="••••••••"
+                  required
+                />
+                <i class="fas fa-lock input-icon"></i>
+              </div>
+
+              <div class="form-navigation">
+                <button type="button" class="nav-btn" id="prev-step-3">
+                  <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button type="button" class="nav-btn primary" id="next-step-3">
+                  Continue <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 4: Verification -->
+            <div class="form-step" id="step-4-form">
+              <div class="verification-success">
+                <div class="success-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <h2 class="auth-title">Verify Your Email</h2>
+                <p class="auth-subtitle">
+                  We've sent a verification link to
+                  <strong id="user-email">your@email.com</strong>
+                </p>
+                <p style="margin-bottom: 1.5rem">
+                  Please check your inbox and click the link to verify your
+                  account.
+                </p>
+
+                <button class="nav-btn" id="resend-email">
+                  <i class="fas fa-sync-alt"></i> Resend Email
+                </button>
+                <div class="form-navigation">
+                  <button type="button" class="nav-btn" id="prev-step-3">
+                    <i class="fas fa-arrow-left"></i> Back
+                  </button>
+                  <button
+                    type="button"
+                    class="nav-btn primary"
+                    id="submit-registration"
+                    style="padding: 10px"
+                  >
+                    Complete Registration <i class="fas fa-check"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Picture Upload (shown after verification) -->
+          <div class="auth-card hidden" id="profile-picture-form">
+            <h2 class="auth-title">Profile Picture</h2>
+            <p class="auth-subtitle">Upload a photo to complete your profile</p>
+
+            <div class="avatar-upload">
+              <div class="avatar-preview" id="avatar-preview">
+                <i class="fas fa-user"></i>
+              </div>
+              <input type="file" id="avatar-upload" accept="image/*" />
+              <label for="avatar-upload">
+                <i class="fas fa-upload"></i> Choose Photo
+              </label>
+            </div>
+
+            <div class="form-navigation">
+              <button
+                type="button"
+                class="nav-btn primary"
+                id="complete-registration"
+              >
+                Complete Setup <i class="fas fa-check"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Login Form -->
+          <div class="auth-card" id="login-form">
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">
+              Sign in to continue your immigration journey
+            </p>
+
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                class="form-control"
+                placeholder="your@email.com"
+                required
+              />
+              <i class="fas fa-envelope input-icon"></i>
+            </div>
+
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                class="form-control"
+                placeholder="••••••••"
+                required
+              />
+              <i class="fas fa-lock input-icon"></i>
+            </div>
+
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <input type="checkbox" id="remember-me" />
+                <label for="remember-me">Remember me</label>
+              </div>
+              <a href="#" class="auth-link" id="show-forgot"
+                >Forgot password?</a
+              >
+            </div>
+
+            <button type="button" class="auth-btn" id="login-btn">
+              <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+
+            <div class="divider">or continue with</div>
+
+            <div class="social-auth">
+              <button type="button" class="social-btn">
+                <i class="fab fa-google"></i> Google
+              </button>
+              <button type="button" class="social-btn">
+                <i class="fab fa-apple"></i> Apple
+              </button>
+            </div>
+
+            <div class="auth-footer">
+              Don't have an account?
+              <a href="#" class="auth-link" id="show-register">Sign up</a>
+            </div>
+          </div>
+
+          <!-- Forgot Password Form -->
+          <div class="auth-card hidden" id="forgot-form">
+            <h2 class="auth-title">Reset Password</h2>
+            <p class="auth-subtitle">
+              Enter your email to receive reset instructions
+            </p>
+
+            <div class="form-group">
+              <label for="forgot-email">Email</label>
+              <input
+                type="email"
+                id="forgot-email"
+                class="form-control"
+                placeholder="your@email.com"
+                required
+              />
+              <i class="fas fa-envelope input-icon"></i>
+            </div>
+
+            <button type="button" class="auth-btn" id="send-reset-link">
+              <i class="fas fa-paper-plane"></i> Send Reset Link
+            </button>
+
+            <div class="auth-footer">
+              Remember your password?
+              <a href="#" class="auth-link" id="back-to-login">Sign in</a>
+            </div>
+          </div>
+
+          <!-- Reset Password Form -->
+          <div class="auth-card hidden" id="reset-form">
+            <div class="success-message">
+              <i class="fas fa-check-circle"></i> Verification code sent to your
+              email
+            </div>
+
+            <h2 class="auth-title">New Password</h2>
+            <p class="auth-subtitle">Create a new password for your account</p>
+
+            <div class="form-group">
+              <label for="reset-code">Verification Code</label>
+              <div class="code-inputs">
+                <input type="text" class="code-input" maxlength="1" required />
+                <input type="text" class="code-input" maxlength="1" required />
+                <input type="text" class="code-input" maxlength="1" required />
+                <input type="text" class="code-input" maxlength="1" required />
+                <input type="text" class="code-input" maxlength="1" required />
+                <input type="text" class="code-input" maxlength="1" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reset-password">New Password</label>
+              <input
+                type="password"
+                id="reset-password"
+                class="form-control"
+                placeholder="••••••••"
+                required
+              />
+              <i class="fas fa-lock input-icon"></i>
+            </div>
+
+            <div class="form-group">
+              <label for="reset-confirm">Confirm Password</label>
+              <input
+                type="password"
+                id="reset-confirm"
+                class="form-control"
+                placeholder="••••••••"
+                required
+              />
+              <i class="fas fa-lock input-icon"></i>
+            </div>
+
+            <button
+              type="button"
+              class="auth-btn secondary"
+              id="reset-password-btn"
+            >
+              <i class="fas fa-sync-alt"></i> Reset Password
+            </button>
+
+            <div class="auth-footer">
+              <a href="#" class="auth-link" id="back-to-login-2"
+                >Back to Sign In</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Auth Flow Controller
+      const AuthFlow = {
+        currentStep: 1,
+        totalSteps: 4,
+
+        init() {
+          this.setupCountryCodeSelector();
+          this.setupPasswordValidation();
+          this.setupAvatarUpload();
+          this.setupCodeInputs();
+          this.setupEventListeners();
+        },
+
+        setupEventListeners() {
+          // Navigation links
+          document
+            .getElementById("show-login")
+            .addEventListener("click", (e) => {
+              e.preventDefault();
+              this.showForm("login");
+            });
+
+          document
+            .getElementById("show-register")
+            .addEventListener("click", (e) => {
+              e.preventDefault();
+              this.showForm("register");
+            });
+
+          document
+            .getElementById("show-forgot")
+            .addEventListener("click", (e) => {
+              e.preventDefault();
+              this.showForm("forgot");
+            });
+
+          document
+            .getElementById("back-to-login")
+            .addEventListener("click", (e) => {
+              e.preventDefault();
+              this.showForm("login");
+            });
+
+          document
+            .getElementById("back-to-login-2")
+            .addEventListener("click", (e) => {
+              e.preventDefault();
+              this.showForm("login");
+            });
+
+          // Registration flow navigation
+          document
+            .getElementById("next-step-1")
+            .addEventListener("click", () => this.nextStep());
+          document
+            .getElementById("next-step-2")
+            .addEventListener("click", () => this.nextStep());
+          document
+            .getElementById("next-step-3")
+            .addEventListener("click", () => this.nextStep());
+          document
+            .getElementById("prev-step-2")
+            .addEventListener("click", () => this.prevStep());
+          document
+            .getElementById("prev-step-3")
+            .addEventListener("click", () => this.prevStep());
+
+          // Form submissions
+          document
+            .getElementById("login-btn")
+            .addEventListener("click", () => this.login());
+          document
+            .getElementById("submit-registration")
+            .addEventListener("click", () => this.submitRegistration());
+          document
+            .getElementById("send-reset-link")
+            .addEventListener("click", () => this.sendResetLink());
+          document
+            .getElementById("reset-password-btn")
+            .addEventListener("click", () => this.resetPassword());
+          document
+            .getElementById("complete-registration")
+            .addEventListener("click", () => this.completeRegistration());
+          document
+            .getElementById("resend-email")
+            .addEventListener("click", () => this.resendEmail());
+        },
+
+        showForm(formName) {
+          // Hide all forms
+          document.querySelectorAll(".auth-card").forEach((form) => {
+            form.classList.add("hidden");
+          });
+
+          // Special case for registration flow
+          if (formName === "register") {
+            this.resetRegistrationFlow();
+            document
+              .getElementById("registration-flow")
+              .classList.remove("hidden");
+            return;
+          }
+
+          // Show requested form with animation
+          const form = document.getElementById(`${formName}-form`);
+          form.classList.remove("hidden");
+          form.style.animation = "fadeInUp 0.5s ease-out";
+
+          // Special handling for specific forms
+          if (formName === "reset") {
+            this.simulateEmailSending();
+          }
+        },
+
+        nextStep() {
+          if (!this.validateCurrentStep()) return;
+
+          // Update UI for current step
+          document
+            .getElementById(`step-${this.currentStep}`)
+            .classList.remove("active");
+          document
+            .getElementById(`step-${this.currentStep}-form`)
+            .classList.remove("active");
+
+          // Mark current step as completed
+          document
+            .getElementById(`step-${this.currentStep}`)
+            .classList.add("completed");
+
+          // Move to next step
+          this.currentStep++;
+
+          // Update UI for next step
+          document
+            .getElementById(`step-${this.currentStep}`)
+            .classList.add("active");
+          document
+            .getElementById(`step-${this.currentStep}-form`)
+            .classList.add("active");
+        },
+
+        prevStep() {
+          // Update UI for current step
+          document
+            .getElementById(`step-${this.currentStep}`)
+            .classList.remove("active");
+          document
+            .getElementById(`step-${this.currentStep}-form`)
+            .classList.remove("active");
+
+          // Move to previous step
+          this.currentStep--;
+
+          // Update UI for previous step
+          document
+            .getElementById(`step-${this.currentStep}`)
+            .classList.add("active");
+          document
+            .getElementById(`step-${this.currentStep}-form`)
+            .classList.add("active");
+        },
+
+        resetRegistrationFlow() {
+          this.currentStep = 1;
+
+          // Reset progress indicators
+          document.querySelectorAll(".reg-step").forEach((step, index) => {
+            step.classList.remove("active", "completed");
+            if (index === 0) step.classList.add("active");
+          });
+
+          // Reset form visibility
+          document.querySelectorAll(".form-step").forEach((step) => {
+            step.classList.remove("active");
+          });
+          document.getElementById("step-1-form").classList.add("active");
+        },
+
+        validateCurrentStep() {
+          switch (this.currentStep) {
+            case 1:
+              return this.validatePersonalInfo();
+            case 2:
+              return this.validateContactInfo();
+            case 3:
+              return this.validatePassword();
+            default:
+              return true;
+          }
+        },
+
+        validatePersonalInfo() {
+          const firstName = document.getElementById("first-name").value;
+          const lastName = document.getElementById("last-name").value;
+          const email = document.getElementById("email").value;
+
+          if (!firstName || !lastName || !email) {
+            this.showError("Please fill in all fields");
+            return false;
+          }
+
+          if (!email.includes("@")) {
+            this.showError("Please enter a valid email address");
+            return false;
+          }
+
+          return true;
+        },
+
+        validateContactInfo() {
+          const phone = document.getElementById("phone").value;
+          const dob = document.getElementById("dob").value;
+
+          if (!phone || !dob) {
+            this.showError("Please fill in all fields");
+            return false;
+          }
+
+          return true;
+        },
+
+        validatePassword() {
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+
+          if (password !== confirmPassword) {
+            this.showError("Passwords do not match");
+            return false;
+          }
+
+          if (
+            password.length < 8 ||
+            !/[A-Z]/.test(password) ||
+            !/[a-z]/.test(password) ||
+            !/[0-9]/.test(password)
+          ) {
+            this.showError("Password does not meet requirements");
+            return false;
+          }
+
+          return true;
+        },
+
+        submitRegistration() {
+          // Show verification step
+          document.getElementById("user-email").textContent =
+            document.getElementById("email").value;
+
+          // After delay, show profile picture step
+          setTimeout(() => {
+            document
+              .getElementById("registration-flow")
+              .classList.add("hidden");
+            document
+              .getElementById("profile-picture-form")
+              .classList.remove("hidden");
+            document.getElementById("profile-picture-form").style.animation =
+              "fadeInUp 0.5s ease-out";
+          }, 2000);
+        },
+
+        completeRegistration() {
+          this.showSuccess(
+            "Registration complete! Redirecting to dashboard..."
+          );
+          // window.location.href = 'dashboard.html';
+        },
+
+        login() {
+          const email = document.getElementById("login-email").value;
+          const password = document.getElementById("login-password").value;
+
+          if (!email || !password) {
+            this.showError("Please fill in all fields");
+            return;
+          }
+
+          this.showSuccess("Login successful! Redirecting to dashboard...");
+          // window.location.href = 'dashboard.html';
+        },
+
+        sendResetLink() {
+          const email = document.getElementById("forgot-email").value;
+
+          if (!email) {
+            this.showError("Please enter your email");
+            return;
+          }
+
+          this.showSuccess("Reset link sent to your email");
+          this.showForm("reset");
+        },
+
+        resetPassword() {
+          const password = document.getElementById("reset-password").value;
+          const confirmPassword =
+            document.getElementById("reset-confirm").value;
+
+          if (password !== confirmPassword) {
+            this.showError("Passwords do not match");
+            return;
+          }
+
+          this.showSuccess("Password reset successful!");
+          this.showForm("login");
+        },
+
+        resendEmail() {
+          this.showSuccess("Verification email resent!");
+        },
+
+        simulateEmailSending() {
+          setTimeout(() => {
+            const successMsg = document.querySelector(
+              "#reset-form .success-message"
+            );
+            successMsg.style.display = "block";
+            successMsg.style.animation = "fadeInUp 0.5s ease-out";
+          }, 1000);
+        },
+
+        showError(message) {
+          alert(message); // Replace with prettier error display
+        },
+
+        showSuccess(message) {
+          alert(message); // Replace with prettier success display
+        },
+
+        setupCountryCodeSelector() {
+          const countryCodeSelect = document.getElementById("country-code");
+          const countryFlag = document.getElementById("country-flag");
+
+          countryCodeSelect.addEventListener("change", function () {
+            const selectedOption = this.options[this.selectedIndex];
+            countryFlag.textContent = selectedOption.getAttribute("data-flag");
+          });
+        },
+
+        setupPasswordValidation() {
+          const passwordInput = document.getElementById("password");
+          const requirements = {
+            length: document.getElementById("req-length"),
+            uppercase: document.getElementById("req-uppercase"),
+            lowercase: document.getElementById("req-lowercase"),
+            number: document.getElementById("req-number"),
+          };
+
+          passwordInput.addEventListener("input", function () {
+            const password = this.value;
+
+            // Check length
+            requirements.length.classList.toggle("valid", password.length >= 8);
+
+            // Check uppercase
+            requirements.uppercase.classList.toggle(
+              "valid",
+              /[A-Z]/.test(password)
+            );
+
+            // Check lowercase
+            requirements.lowercase.classList.toggle(
+              "valid",
+              /[a-z]/.test(password)
+            );
+
+            // Check number
+            requirements.number.classList.toggle(
+              "valid",
+              /[0-9]/.test(password)
+            );
+          });
+        },
+
+        setupAvatarUpload() {
+          const avatarUpload = document.getElementById("avatar-upload");
+          const avatarPreview = document.getElementById("avatar-preview");
+
+          avatarUpload.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Profile Preview">`;
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        },
+
+        setupCodeInputs() {
+          document
+            .querySelectorAll(".code-input")
+            .forEach((input, index, inputs) => {
+              input.addEventListener("input", function () {
+                if (this.value.length === 1 && index < inputs.length - 1) {
+                  inputs[index + 1].focus();
+                }
+              });
+
+              input.addEventListener("keydown", function (e) {
+                if (
+                  e.key === "Backspace" &&
+                  this.value.length === 0 &&
+                  index > 0
+                ) {
+                  inputs[index - 1].focus();
+                }
+              });
+            });
+        },
+      };
+
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        AuthFlow.init();
+      });
+    </script>
+  </body>
+</html>
