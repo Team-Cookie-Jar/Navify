@@ -1,8 +1,8 @@
 # app/models/util_model.py
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from fastapi import Query
-from typing import Optional
+from typing import Optional, List, Dict
 from datetime import datetime
 
 class UtilsState(BaseModel):
@@ -16,17 +16,23 @@ class Location(BaseModel):
 
 class DocImageJSON(BaseModel):
     img: str
+    type: str
 
+class Advancements(BaseModel):
+    type: str
+    points: int
+    
 class UserData(BaseModel):
     id: str
     firstname: str
     lastname: str
-    email: str
+    email: EmailStr
     phone: str
     age: int
     DOB: datetime
-    user_profile: str
-
+    profile_picture_url: str
+    confirm_email: bool = False
+    advancements: Dict[Advancements] = {}
 
 class UserContacts(BaseModel):
     name: str

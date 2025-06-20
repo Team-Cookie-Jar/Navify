@@ -44,6 +44,7 @@ def analyse_visa_document(doc: DocumentInput):
 def simulate_visa_path(doc: DocumentInput):
     try:
 
+        document_data = {}
         # Decode if base64
         if doc.document_base64:
             document_data = decode_base64_json(doc.document_base64)
@@ -57,7 +58,7 @@ def simulate_visa_path(doc: DocumentInput):
             return JSONResponse(status_code=400, content={"error": "User scenario is required"})
 
         # Simulated response
-        simulation = simulate_what_if(document_data, doc.scenario)
+        simulation = simulate_what_if(document_data or {}, doc.scenario or {})
 
         return {
             "current_path": "Green Card in 2 years",

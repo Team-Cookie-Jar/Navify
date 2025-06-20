@@ -1,6 +1,6 @@
 # app/routers/voice.py
 
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
 from PIL import Image
 from app.models.assistant_model import *
