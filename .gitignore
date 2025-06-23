@@ -11,4 +11,4 @@ backend/.env
 .vscode/settings.json
 backend/app/core/firebase_key.json
 frontend/build
-.gitignore
+frontend.zip
