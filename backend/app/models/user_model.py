@@ -13,7 +13,4 @@ class RegisterForm(BaseModel):
 class LoginForm(BaseModel):
     email: EmailStr
     psw: str
-
-class UserInDB(BaseModel):
-    id: str
-    email: EmailStr
+    

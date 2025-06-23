@@ -8,20 +8,16 @@ from app.core.utils import User
 
 router = APIRouter()
 
-@router.post(path="/login/ppsecure", response_model=UserData)
+@router.post(path="/login/ppsecure", response_model=dict)
 def user_login(form: LoginForm):
     user = User()
-    status = user.from_login(form)
-    if status == "success":
-        return user.fetch_userdata()
-    else:
-        return JSONResponse(status_code=400, content={"error": status})
+    return user.from_login(form)
 
 @router.post(path="/login/req-psw-reset", response_model=dict)
 async def request_password_reset(user_id: str):
     user = User()
     user.fromUUID(user_id)
-    return await user.request_password_reset()
+    return user.request_password_reset()
 
 @router.post(path="/login/validate-psw-reset", response_model=dict)
 def validate_password_reset(user_id: str, reset_code: int):

@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel, EmailStr
 from fastapi import Query
-from typing import Optional, List, Dict
+from typing import Optional, List
 from datetime import datetime
 
 class UtilsState(BaseModel):
@@ -17,10 +17,6 @@ class Location(BaseModel):
 class DocImageJSON(BaseModel):
     img: str
     type: str
-
-class Advancements(BaseModel):
-    type: str
-    points: int
     
 class UserData(BaseModel):
     id: str
@@ -32,7 +28,6 @@ class UserData(BaseModel):
     DOB: datetime
     profile_picture_url: str
     confirm_email: bool = False
-    advancements: Dict[Advancements] = {}
 
 class UserContacts(BaseModel):
     name: str

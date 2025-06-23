@@ -2,16 +2,45 @@
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+from typing import Any, Dict
 from app.core.utils import User
-from app.models.util_model import UserData
-import random
+from app.core.db import db
+import datetime
 
 router = APIRouter()
 
-@router.post(path="/quest/daily", response_model=dict)
-async def fetch_daily_quests(user_id: str):
+@router.get(path="/quest/daily", response_model=dict)
+def get_daily_quests(lang: str = "en"):
+    today = datetime.date.today().isoformat()
+    quest = db.collection("quests").document(today).get()
+    if not quest.exists:
+        return JSONResponse(status_code=404, content={"error": "No quest defined for today"})
+
+    qdata = quest.to_dict()
+    if qdata is None:
+        return JSONResponse(status_code=404, content={"error": "Quest data is empty"})
+
+    localized = qdata["task_translations"].get(lang, qdata["tasks"])
+
+    return {"id": qdata["id"], "tasks": localized, "reward": qdata["reward"]}
+
+@router.post(path="/quest/submit", response_model=dict)
+def submit_quest(user_id: str):
     user = User()
     user.fromUUID(user_id)
-    quests = user.fetch_data("quests")["uncompleted"]
-    return quests[random.randint(0, quests.len())]
+    return user.submit_quest()
+
+@router.post(path="quest/redeem-reward/{reward_id}")
+def redeem_reward(reward_id: str, user_id):
+    user = User()
+    user.fromUUID(user_id)
+    return user.redeem_reward(reward_id)
+
+@router.get(path="/leaderboard")
+def get_leaderboard(limit: int = 10):
+    users = db.collection("users_progress").order_by("xp", direction="DESENDING").limit(limit).stream()
+    return [
+        {"user_id": u.id, "xp": u.to_dict().get("xp", 0), "streak": u.to_dict().get("current_streak", 0)}
+        for u in users
+    ]
     
