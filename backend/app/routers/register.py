@@ -22,7 +22,7 @@ async def register_user(form: RegisterForm):
 async def upload_profile(user_id: str, profile_picture: UploadFile = File(...)):
     user = User()
     userdata = user.fromUUID(user_id)
-    path_to_upload = "profile_pictures/"
+    path_to_upload = "public/profile_pictures/"
     filename = f"{user_id}.jpg"
     file = await upload_image(filename, path_to_upload, profile_picture)
     userdata.profile_picture_url = file["path"]

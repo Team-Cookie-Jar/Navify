@@ -22,7 +22,7 @@ app.include_router(quest.router)
 app.include_router(register.router)
 app.include_router(visa.router)
 
-app.mount("/profile_pictures", StaticFiles(directory="profile_pictures"), name="profile_pictures")
+app.mount("/public", StaticFiles(directory="public"), name="public")
 
 @app.get("/")
 async def root():
