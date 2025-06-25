@@ -107,14 +107,13 @@ class User:
         }
 
         user = db.collection("users").document(self.uuid)
-        if user.get().exists:
-            return JSONResponse(status_code=400, content={"error": "Invalid user ID"})
+        if not user.get().exists:
+            return JSONResponse(status_code=404, content={"error": "Invalid user ID"})
 
         user.update(user_data)
         return {"status": "success", "userdata": user_data}
 
     def add_user(self):
-        email_code = round(random.randint(100000, 999999))
         user_data = {
             "firstname": self.firstname,
             "lastname": self.lastname,
@@ -134,60 +133,9 @@ class User:
 
             db.collection("users").document(self.uuid).set(user_data)
 
-            try:
-                existing_request = db.collection("email_codes").document(self.uuid)
-                if existing_request.get().exists:
-                    existing_request.delete()
-
-                email_code_request = {
-                    "id": self.uuid,
-                    "datetime": datetime.now(),
-                    "digits": email_code
-                }
-
-                db.collection("email_codes").document(self.uuid).set(email_code_request)
-
-                code_html = f"""<div style='display: flex;height: 61px;width: 249px;justify-content: space-between;align-items: center;flex-direction: row;line-height: 14px;'>{"".join(f"<div style='display: flex;height: 11px;padding: 19px 6px;border: 2px solid #6f67d9;border-radius: 7px;background-color: #f5f5f5;color: #000;font-size: 40px;'>{str(email_code)[i]}</div>" for i in range(len(str(email_code))))}</div>"""
-
-                html_content = [
-                    {
-                        "type": "table",
-                        "content": [    
-                            {
-                                "type": "table",
-                                "content": [
-                                    {"type": "image", "content": "image/logo.png"},
-                                    {"type": "header", "content": "Verify Your Email Address"},
-                                    {"type": "text", "content": "We just need to verify your email address to activate your Navify account. Here's your verification code:"},
-                                    {"type": "html", "content": code_html},
-                                    {"type": "html", "content": "This code expires within 5 minutes"},
-                                    {"type": "text", "content": "Only enter this code on the Navify website or app. Don't share it with anyone. We'll never ask for it outside any of our platforms."},
-                                    {"type": "text", "content": "Welcome aboard!"},
-                                    {"type": "text", "content": "Navify Team"}
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "type": "table",
-                        "content": [
-                            {"type": "text", "content": "This email was sent to you by Navify because you signed up for a Navify account.break-linePlease let us know if you feel that this email was sent to you by error."},
-                            {"type": "text", "content": "© 2025 Navify"},
-                            {"type": "list", "content": [
-                                {"type": "hyperlink", "content": "Privacy Policy", "link": "#"},
-                                {"type": "hyperlink", "content": "Personal Data Protection and Privacy Policy", "link": "#"},
-                                {"type": "hyperlink", "content": "Acceptable Use Policy", "link": "#"},
-                            ]}
-                        ]
-                    }
-                ]
-
-                send_html_email(to_email=self.email, to_name=f"{self.firstname} {self.lastname}", subject="Verify your email - Navify", html_content=html_content)
-
-            except Exception as e:
-                raise HTTPException(status_code=500, detail={"error": str(e)})
+            self.request_confirm_email()
         except Exception as e:
-            raise HTTPException(status_code=500, detail={"error": str(e)})
+            raise HTTPException(status_code=500, detail=e)
 
     def from_register(self, form: RegisterForm):
         self.uuid = generate_uuid()
@@ -203,19 +151,72 @@ class User:
 
         return self.add_user()
 
+    def request_confirm_email(self):
+        email_code = round(random.randint(100000, 999999))
+        try:
+            existing_request = db.collection("email_codes").document(self.uuid)
+            if existing_request.get().exists:
+                existing_request.delete()
+
+            email_code_request = {
+                "id": self.uuid,
+                "datetime": datetime.now(),
+                "digits": email_code
+            }
+
+            db.collection("email_codes").document(self.uuid).set(email_code_request)
+
+            #code_html = f"""<div style='display: flex;height: 61px;width: 249px;justify-content: space-between;align-items: center;flex-direction: row;line-height: 14px;'>{"".join(f"<div style='display: flex;height: 11px;padding: 19px 6px;border: 2px solid #6f67d9;border-radius: 7px;background-color: #f5f5f5;color: #000;font-size: 40px;'>{str(email_code)[i]}</div>" for i in range(len(str(email_code))))}</div>"""
+
+            """html_content = [
+                {
+                    "type": "table",
+                    "content": [    
+                        {
+                            "type": "table",
+                            "content": [
+                                {"type": "image", "content": "image/logo.png"},
+                                {"type": "header", "content": "Verify Your Email Address"},
+                                {"type": "text", "content": "We just need to verify your email address to activate your Navify account. Here's your verification code:"},
+                                {"type": "html", "content": code_html},
+                                {"type": "html", "content": "This code expires within 5 minutes"},
+                                {"type": "text", "content": "Only enter this code on the Navify website or app. Don't share it with anyone. We'll never ask for it outside any of our platforms."},
+                                {"type": "text", "content": "Welcome aboard!"},
+                                {"type": "text", "content": "Navify Team"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "table",
+                    "content": [
+                        {"type": "text", "content": "This email was sent to you by Navify because you signed up for a Navify account.break-linePlease let us know if you feel that this email was sent to you by error."},
+                        {"type": "text", "content": "© 2025 Navify"},
+                        {"type": "list", "content": [
+                            {"type": "hyperlink", "content": "Privacy Policy", "link": "#"},
+                            {"type": "hyperlink", "content": "Personal Data Protection and Privacy Policy", "link": "#"},
+                            {"type": "hyperlink", "content": "Acceptable Use Policy", "link": "#"},
+                        ]}
+                    ]
+                }
+            ]
+
+            send_html_email(to_email=self.email, to_name=f"{self.firstname} {self.lastname}", subject="Verify your email - Navify", html_content=html_content)"""
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=e)
+
     def from_login(self, form: LoginForm):
-        hashed_pw = hash_password(form.psw)
 
         query = db.collection("users").where(field_path="email", op_string="==", value=form.email).get()
         if not query:
-            print(hashed_pw)
             raise HTTPException(status_code=404, detail={"error": "Invalid email, please register with this email"})
 
         user_data = query[0].to_dict()
         if user_data is None:
             raise HTTPException(status_code=404, detail={"error": "User data not found"})
 
-        if not verify_password(user_data["psw"], hashed_pw):
+        if not verify_password(form.psw, user_data["psw"]):
             raise HTTPException(status_code=400, detail={"error": "Incorrect password"})
 
         self.uuid = query[0].id
@@ -249,7 +250,7 @@ class User:
         self.uuid = uuid
         query = db.collection("users").document(self.uuid).get()
         if not query:
-            raise HTTPException(status_code=500, detail={"error": "Invalid user ID"})
+            raise HTTPException(status_code=404, detail={"error": "Invalid user ID"})
 
         user = query.to_dict()
         if user is None:
@@ -271,7 +272,7 @@ class User:
         uuid = self.uuid
         query = db.collection(data).document(uuid).get()
         if not query:
-            raise HTTPException(status_code=500, detail={"error": f"Invalid user ID"})
+            raise HTTPException(status_code=404, detail={"error": f"Invalid user ID"})
 
         result = query.to_dict()
         if result is None:
@@ -342,7 +343,7 @@ class User:
             code = self.fetch_data("reset_psw_request")
 
             now = datetime.now()
-            minutes = now.minute - code["datetime"].minute - (now.month < code["datetime"])
+            minutes = now.minute - code["datetime"].minute - (now.second < code["datetime"].second)
             if minutes >= 5:
                 return JSONResponse(status_code=400, content={"error": "Code expired, request another one"})
             
@@ -390,7 +391,7 @@ class User:
 
                     user = db.collection("users").document(self.uuid)
                     if not user.get().exists:
-                        return JSONResponse(status_code=400, content={"error": "Invalid user ID"})
+                        return JSONResponse(status_code=404, content={"error": "Invalid user ID"})
 
                     user.update(user_data)
                     return {"status": "success"}

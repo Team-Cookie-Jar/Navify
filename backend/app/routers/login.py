@@ -14,7 +14,7 @@ def user_login(form: LoginForm):
     return user.from_login(form)
 
 @router.post(path="/login/req-psw-reset", response_model=dict)
-async def request_password_reset(user_id: str):
+def request_password_reset(user_id: str):
     user = User()
     user.fromUUID(user_id)
     return user.request_password_reset()

@@ -23,19 +23,25 @@ async def upload_profile(user_id: str, profile_picture: UploadFile = File(...)):
     user = User()
     userdata = user.fromUUID(user_id)
     path_to_upload = "profile_pictures/"
-    filename = f"{user_id}_{profile_picture.filename}.jpg"
+    filename = f"{user_id}.jpg"
     file = await upload_image(filename, path_to_upload, profile_picture)
     userdata.profile_picture_url = file["path"]
     return user.from_userdata(userdata, True)
 
+@router.post(path="/register/request_confirm_email")
+def request_confirm_email(user_id: str):
+    user = User()
+    user.fromUUID(user_id)
+    user.request_confirm_email() 
+
 @router.post(path="/register/confirm_email", response_model=dict)
-async def confirm_email(user_id: str, email_code: int):
+def confirm_email(user_id: str, email_code: int):
     user = User()
     userdata = user.fromUUID(user_id)
     code = user.fetch_data("email_codes")
 
     now = datetime.now()
-    minutes = now.minute - code["datetime"].minute - (now.month < code["datetime"])
+    minutes = now.minute - code["datetime"].minute - (now.second < code["datetime"].second)
     if minutes >= 5:
         return {"status": "Code expired, request another one"}
     
