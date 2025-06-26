@@ -8,6 +8,7 @@ from app.models.user_model import RegisterForm, LoginForm
 from app.core.db import db
 from PIL import Image
 from datetime import datetime, date, timedelta
+from deep_translator import GoogleTranslator
 import random
 import json
 import base64
@@ -47,6 +48,16 @@ def generate_uuid():
 def decode_base64_json(data: str) -> dict:
     decoded_bytes = base64.b64decode(data)
     return json.loads(decoded_bytes.decode("utf-8"))
+
+def translate_to_languages(text: str, languages: list[str]) -> dict:
+    translations = {}
+    for lang in languages:
+        try:
+            translated = GoogleTranslator(source='auto', target=lang).translate(text)
+            translations[lang] = translated
+        except Exception as e:
+            translations[lang] = f"Error: {str(e)}"
+    return translations
 
 def calculate_age(dob):
     today = datetime.now()
@@ -398,7 +409,9 @@ class User:
 
         except Exception as e:
             return JSONResponse(status_code=500, content={"error": str(e)})
-        
+
+    # TODO rework this module   
+    """
     def submit_quest(self):
         user_ref = db.collection("users_progress").document(self.uuid)
         user_data = user_ref.get().to_dict() or {
@@ -442,6 +455,100 @@ class User:
         user_data["completed_quests"].append(quest_id)
         user_data["xp"] += xp_reward
         user_data["last_quest_date"] = today.isoformat()
+
+        for badge, rule in BADGE_RULES.items():
+            if badge not in user_data["badges"] and rule(user_data):
+                user_data["badges"].append(badge)
+
+        user_ref.set(user_data)
+        return JSONResponse(status_code=200, content={"message": "Quest submitted", "badges": user_data["badges"]})
+    """
+
+    def submit_daily_quest(self, quest_id: str):
+        user_ref = db.collection("users_progress").document(self.uuid)
+        user_data = user_ref.get().to_dict() or {
+            "completed_quests": [],
+            "current_streak": 0,
+            "xp": 0,
+            "badges": [],
+            "last_quest_data": None   
+        }
+
+        today = date.today()
+        last_date = user_data["last_quest_date"]
+
+        if quest_id in user_data["completed_quests"]:
+            raise HTTPException(400, "Quest already completed.")
+
+        yesterday = today - timedelta(days=1)
+        if last_date == yesterday.isoformat():
+            user_data["current_streak"] = 1
+        
+        else:
+            user_data["current_streak"] = 1
+
+        quest = db.collection("quests").document(today.isoformat()).get()
+        if quest.exists:
+            data = quest.to_dict()
+
+            if data is None:
+                raise HTTPException(status_code=404, detail="Quest data not found")
+            
+            xp_reward = data["reward"]
+        else:
+            xp_reward = 5
+            data = {
+                "id": quest_id,
+                "tasks": "Complete today's quest",
+                "reward": xp_reward
+            }
+        
+        user_data["completed_quests"].append(quest_id)
+        user_data["xp"] += xp_reward
+        user_data["last_quest_date"] = today.isoformat()
+
+        for badge, rule in BADGE_RULES.items():
+            if badge not in user_data["badges"] and rule(user_data):
+                user_data["badges"].append(badge)
+
+        user_ref.set(user_data)
+        return JSONResponse(status_code=200, content={"message": "Quest submitted", "badges": user_data["badges"]})
+
+    def submit_weekly_quest(self, quest_id: str):
+        user_ref = db.collection("users_progress").document(self.uuid)
+        user_data = user_ref.get().to_dict() or {
+            "completed_quests": [],
+            "current_streak": 0,
+            "xp": 0,
+            "badges": [],
+            "last_quest_data": None   
+        }
+
+        today = date.today()
+        week_start = today - timedelta(days=today.weekday())
+        week_start_str = week_start.isoformat()
+
+        if quest_id in user_data["completed_quests"]:
+            raise HTTPException(400, "Quest already completed.")
+
+        quest = db.collection("quests").document(week_start_str).get()
+        if quest.exists:
+            data = quest.to_dict()
+
+            if data is None:
+                raise HTTPException(status_code=404, detail="Quest data not found")
+            
+            xp_reward = data["reward"]
+        else:
+            xp_reward = 10
+            data = {
+                "id": quest_id,
+                "tasks": "Complete this week's quest",
+                "reward": xp_reward
+            }
+        
+        user_data["completed_quests"].append(quest_id)
+        user_data["xp"] += xp_reward
 
         for badge, rule in BADGE_RULES.items():
             if badge not in user_data["badges"] and rule(user_data):

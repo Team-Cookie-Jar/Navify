@@ -13,3 +13,4 @@ backend/.env
 backend/app/core/firebase_key.json
 frontend/build
 frontend.zip
+backend/test.py
