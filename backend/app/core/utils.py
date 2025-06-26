@@ -88,6 +88,15 @@ def encode_image_as_base64(file_path: str):
         b64 = base64.b64encode(img.read()).decode("utf-8")
     return b64
 
+
+def file_to_data_url(file: UploadFile) -> str:
+    file_contents = file.file.read()
+    encoded_file = base64.b64encode(file_contents).decode('utf-8')
+    mime_type = file.content_type
+    data_url = f"data:{mime_type};base64,{encoded_file}"
+    
+    return data_url
+    
 class User:
     def __init__(self):
         self.uuid = generate_uuid()
