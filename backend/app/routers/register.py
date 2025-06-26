@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
-from app.core.utils import User, upload_image
+from app.core.utils import User, file_to_data_url
 from app.models.util_model import UserData
 from app.models.user_model import RegisterForm
 from datetime import datetime
@@ -24,8 +24,8 @@ async def upload_profile(user_id: str, profile_picture: UploadFile = File(...)):
     userdata = user.fromUUID(user_id)
     path_to_upload = "public/profile_pictures/"
     filename = f"{user_id}.jpg"
-    file = await upload_image(filename, path_to_upload, profile_picture)
-    userdata.profile_picture_url = file["path"]
+    dataurl = file_to_data_url(profile_picture)
+    userdata.profile_picture_url = dataurl
     return user.from_userdata(userdata, True)
 
 @router.post(path="/register/request_confirm_email")
