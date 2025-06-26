@@ -82,7 +82,8 @@ def add_daily_quest(quest_id: str, task: str, reward: int):
     quest_ref.set({
         "id": quest_id,
         "task": task,
-        "reward": reward
+        "reward": reward,
+        "type": "daily"
     })
     
     return {"status": "success", "message": "Daily quest added successfully"}
@@ -101,7 +102,8 @@ def add_weekly_quest(quest_id: str, task: str, reward: int):
     quest_ref.set({
         "id": quest_id,
         "task": task,
-        "reward": reward
+        "reward": reward,
+        "type": "weekly"
     })
     
     return {"status": "success", "message": "Weekly quest added successfully"}

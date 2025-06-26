@@ -332,7 +332,6 @@ class User:
         send_html_email(to_email=self.email, to_name=f"{self.firstname} {self.lastname}", subject="Verify your email - Navify", html_content=html_content)
 
         user_reset_request = {
-            "id": self.uuid,
             "datetime": datetime.now(),
             "reset_code": reset_code
         }
@@ -392,7 +391,7 @@ class User:
             now = datetime.now()
             minutes = now.minute - reset_key["datetime"].minute - (now.month < reset_key["datetime"])
             if minutes >= 5:
-                return JSONResponse(status_code=400, content={"error": "Code expired, request another one"})
+                return JSONResponse(status_code=400, content={"error": "Session expired, request another one"})
 
             else:
                 if change_key == reset_key["reset_key"]:
@@ -419,7 +418,7 @@ class User:
             "current_streak": 0,
             "xp": 0,
             "badges": [],
-            "last_quest_data": None   
+            "last_quest_date": None   
         }
 
         today = date.today()
@@ -471,7 +470,7 @@ class User:
             "current_streak": 0,
             "xp": 0,
             "badges": [],
-            "last_quest_data": None   
+            "last_quest_date": None   
         }
 
         today = date.today()
@@ -521,7 +520,7 @@ class User:
             "current_streak": 0,
             "xp": 0,
             "badges": [],
-            "last_quest_data": None   
+            "last_quest_date": None   
         }
 
         today = date.today()
